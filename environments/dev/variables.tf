@@ -12,3 +12,7 @@ variable "subscription_id" {
   type        = string
   default     = null
 }
+variable "admin_group_object_id" {
+  description = "Azure AD group object ID for AKS admins"
+  type        = string
+}
