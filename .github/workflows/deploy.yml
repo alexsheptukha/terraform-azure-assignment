@@ -52,6 +52,4 @@ jobs:
       - name: Terraform Apply
         if: github.event_name == 'workflow_dispatch'
         run: |
-          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} apply \
-            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-            -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" -auto-approve tfplan
+          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} apply -auto-approve tfplan
