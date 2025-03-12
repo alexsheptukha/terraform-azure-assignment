@@ -45,9 +45,14 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} plan \
-            -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-            -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" -out=tfplan
+          if [ "${{ github.event.inputs.environment || 'dev' }}" == "dev" ]; then
+            terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} plan \
+             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+             -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" -out=tfplan
+          else
+            terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} plan \
+             -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -out=tfplan
+          fi
 
       - name: Terraform Apply
         if: github.event_name == 'workflow_dispatch'
