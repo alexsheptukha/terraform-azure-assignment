@@ -1,0 +1,55 @@
+name: Terraform Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose environment (dev or qa)'
+        required: true
+      deploy_aks:
+        description: 'Deploy AKS in DEV environment? (true/false)'
+        default: 'false'
+        required: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: |
+          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} init \
+            -backend-config="storage_account_name=${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}" \
+            -backend-config="access_key=${{ secrets.TFSTATE_STORAGE_KEY }}"
+
+      - name: Terraform Plan
+        run: |
+          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} plan \
+            -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" -out=tfplan
+
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          terraform -chdir=environments/${{ github.event.inputs.environment || 'dev' }} apply \
+            -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" -auto-approve tfplan
