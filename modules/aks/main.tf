@@ -37,17 +37,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = var.dns_prefix
   kubernetes_version  = "1.28"
 
-  private_cluster_enabled = true # private (no public access)
+  private_cluster_enabled = true
 
   default_node_pool {
-    name                = "default"
-    node_count          = 1
-    vm_size             = "Standard_D2_v2"
-    vnet_subnet_id      = azurerm_subnet.aks_subnet.id
-    enable_auto_scaling = true
-    min_count           = 1
-    max_count           = 3
-    os_disk_type        = "Managed"
+    name           = "default"
+    node_count     = 1
+    vm_size        = "Standard_D2_v2"
+    vnet_subnet_id = azurerm_subnet.aks_subnet.id
   }
 
   identity {
@@ -56,25 +52,37 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   role_based_access_control_enabled = true
   azure_active_directory_role_based_access_control {
-    managed            = true
+    tenant_id = var.tenant_id
     admin_group_object_ids = var.admin_group_object_ids
     azure_rbac_enabled = true
   }
 
   network_profile {
-    network_plugin    = "azure"
-    network_policy    = "calico"
-    service_cidr      = "10.1.0.0/16"
-    dns_service_ip    = "10.1.0.10"
-    docker_bridge_cidr = "172.17.0.1/16"
+    network_plugin = "azure"
+    network_policy = "calico"
+    service_cidr   = "10.1.0.0/16"
+    dns_service_ip = "10.1.0.10"
   }
 
-  addon_profile {
-    oms_agent {
-      enabled                    = true
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.aks_logs.id
-    }
+  oms_agent {
+    enabled = true
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.aks_logs.id
   }
 
-  automatic_channel_upgrade = "stable"
+  auto_scaler_profile {
+    balance_similar_node_groups = true
+  }
+
+  automatic_upgrade_channel = "stable"
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "aks_node_pool" {
+  name                  = "autoscale"
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+  vm_size               = "Standard_D2_v2"
+  vnet_subnet_id        = azurerm_subnet.aks_subnet.id
+  enable_auto_scaling   = true
+  min_count             = 1
+  max_count             = 3
+  mode                  = "User"
 }

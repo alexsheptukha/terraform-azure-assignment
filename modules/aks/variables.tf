@@ -7,3 +7,7 @@ variable "admin_group_object_ids" {
   type        = list(string)
   default     = []
 }
+variable "tenant_id" {
+  description = "Azure AD Tenant ID for AKS RBAC integration"
+  type        = string
+}

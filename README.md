@@ -78,6 +78,12 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
     ```bash
     az aks get-credentials --resource-group dev-rg --name dev-aks
     ```
+    
+**Get Tenant ID**
+
+    ```bash
+    az account show --query tenantId -o tsv
+    ```
 
 **GitHub Secrets**:
 
@@ -88,6 +94,7 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
    - `QA_TFSTATE_STORAGE_ACCOUNT_NAME`: QA Storage Account name (e.g., `qatfstate1698765433`).
    - `QA_TFSTATE_STORAGE_KEY`: QA Storage Account access key.
    - `AKS_ADMIN_GROUP_ID`: AKS admin group id - for access to the Kubernetes cluster
+   - `AZURE_TENANT_ID`: Your Tenant ID
 
 **GitHub Environments**:
 

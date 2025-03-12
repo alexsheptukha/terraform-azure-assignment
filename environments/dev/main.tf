@@ -24,13 +24,14 @@ module "storage_account" {
 }
 
 module "aks" {
-  count               = var.deploy_aks ? 1 : 0
-  source              = "../../modules/aks"
-  aks_name            = "dev-aks"
+  count = var.deploy_aks ? 1 : 0
+  source = "../../modules/aks"
+  aks_name = "dev-aks"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  dns_prefix          = "devaks"
+  location = azurerm_resource_group.rg.location
+  dns_prefix = "devaks"
   admin_group_object_ids = [var.admin_group_object_id]
+  tenant_id  = var.tenant_id
 }
 
 resource "random_string" "suffix" {

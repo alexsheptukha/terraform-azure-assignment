@@ -1,9 +1,6 @@
 name: Terraform Deployment
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -56,6 +53,7 @@ jobs:
               -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
               -var "deploy_aks=${{ github.event.inputs.deploy_aks || 'false' }}" \
               -var "admin_group_object_id=${{ secrets.AKS_ADMIN_GROUP_ID }}" \
+              -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" \
               -out=tfplan
           else
             terraform -chdir=environments/qa plan \

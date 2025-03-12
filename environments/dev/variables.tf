@@ -16,3 +16,7 @@ variable "admin_group_object_id" {
   description = "Azure AD group object ID for AKS admins"
   type        = string
 }
+variable "tenant_id" {
+  description = "Azure AD Tenant ID for AKS RBAC integration"
+  type        = string
+}
