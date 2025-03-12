@@ -1,4 +1,3 @@
-# terraform-azure-pipeline/main.tf
 provider "azurerm" {
   features {}
 }
