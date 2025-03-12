@@ -1,12 +1,11 @@
 provider "azurerm" {
+  subscription_id = var.subscription_id
   features {}
-  subscription_id=var.subscription_id
 }
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "tfstate-rg"
-    storage_account_name = var.tfstate_storage_account_name
+    resource_group_name  = "qa-tfstate-rg"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
@@ -27,5 +26,5 @@ module "key_vault" {
 resource "random_string" "suffix" {
   length  = 8
   special = false
-  upper = false
+  upper   = false
 }
