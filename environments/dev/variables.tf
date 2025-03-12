@@ -7,3 +7,8 @@ variable "deploy_aks" {
   type        = bool
   default     = false
 }
+variable "subscription_id" {
+  description = "The Azure subscription ID"
+  type        = string
+  default     = null
+}
