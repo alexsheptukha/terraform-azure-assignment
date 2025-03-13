@@ -5,9 +5,9 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "qa-tfstate-rg"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
+    resource_group_name = "qa-tfstate-rg"
+    container_name      = "tfstate"
+    key                 = "terraform.tfstate"
   }
 }
 
