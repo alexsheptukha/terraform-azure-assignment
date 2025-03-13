@@ -112,11 +112,13 @@ az account show --query tenantId -o tsv
 ## Deployment Process
 ### Pipeline Overview
 - **Trigger**:
-  - On `workflow_dispatch`: Runs `terraform plan` and waits for manual approval before `terraform apply`.
+  - On `workflow_dispatch`: Runs `terraform plan job` and waits for manual approval before `terraform apply job`.
 - **Steps**:
   1. `Terraform Init`: Initializes the backend with environment-specific Storage Accounts.
   2. `Terraform Plan`: Generates a plan (`tfplan`) based on the selected environment.
   3. `Terraform Apply`: Applies the plan after manual approval (only for `workflow_dispatch`).
+- **Artifacts**:
+  - Artifact with tfplan is passed from "plan" job to "apply" job.
 
 ### Running the Pipeline
 
@@ -141,6 +143,7 @@ Deploying on push is disabled for security reasons.
   - Configure RBAC in Azure to limit access to `dev-tfstate-rg` and `qa-tfstate-rg` (e.g., `Contributor` role for specific teams).
   - GitHub Environments require manual approval by authorized reviewers.
 - **AKS Security**: Advanced security configuration including a private cluster (API accessible only via VNet), Azure AD integration with RBAC for fine-grained access control, Calico network policies for pod traffic isolation, Network Security Group (NSG) for subnet protection, and Azure Monitor integration for logging and diagnostics.
+- **GitHub Actions Deployment**: Plan and Apply jobs are divided, Plan is executed manually and Apply needs to be approved by a responsive person.
 
 ## Resources Deployed
 - **DEV**:
