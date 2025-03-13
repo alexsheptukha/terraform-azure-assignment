@@ -140,7 +140,7 @@ Deploying on push is disabled for security reasons.
 - **Access Control**: 
   - Configure RBAC in Azure to limit access to `dev-tfstate-rg` and `qa-tfstate-rg` (e.g., `Contributor` role for specific teams).
   - GitHub Environments require manual approval by authorized reviewers.
-- - **AKS Security**: Advanced security configuration including a private cluster (API accessible only via VNet), Azure AD integration with RBAC for fine-grained access control, Calico network policies for pod traffic isolation, Network Security Group (NSG) for subnet protection, and Azure Monitor integration for logging and diagnostics.
+- **AKS Security**: Advanced security configuration including a private cluster (API accessible only via VNet), Azure AD integration with RBAC for fine-grained access control, Calico network policies for pod traffic isolation, Network Security Group (NSG) for subnet protection, and Azure Monitor integration for logging and diagnostics.
 
 ## Resources Deployed
 - **DEV**:
