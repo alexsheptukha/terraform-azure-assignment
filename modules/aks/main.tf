@@ -74,6 +74,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   automatic_upgrade_channel = "stable"
 }
 
+# additional node pool for more flexibility
 resource "azurerm_kubernetes_cluster_node_pool" "aks_node_pool" {
   name                  = "autoscale"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id

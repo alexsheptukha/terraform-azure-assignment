@@ -59,31 +59,32 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
    - Save the JSON output.
    
 **Create Admin group in Azure AD for AKS access**
-    ```bash
-    az ad group create --display-name "AKS-Admins" --mail-nickname "AKSAdmins" --description "AKS Admins for DEV"
-    # save object id for later use
-    az ad group show --group "AKS-Admins" --query id -o tsv
-    ```
+
+```bash
+az ad group create --display-name "AKS-Admins" --mail-nickname "AKSAdmins" --description "AKS Admins for DEV"
+# save object id for later use
+az ad group show --group "AKS-Admins" --query id -o tsv
+```
     
 **Assign AKS access for a created group**
 
-    ```bash
-    az role assignment create --assignee <id-from-above> \
-      --role "Azure Kubernetes Service Cluster Admin Role" \
-      --scope "/subscriptions/<subscription-id>/resourceGroups/dev-rg"
-    ```
+```bash
+az role assignment create --assignee <id-from-above> \
+--role "Azure Kubernetes Service Cluster Admin Role" \
+--scope "/subscriptions/<subscription-id>/resourceGroups/dev-rg"
+```
     
 **Get kubeconfig**
 
-    ```bash
-    az aks get-credentials --resource-group dev-rg --name dev-aks
-    ```
+```bash
+az aks get-credentials --resource-group dev-rg --name dev-aks
+```
     
 **Get Tenant ID**
 
-    ```bash
-    az account show --query tenantId -o tsv
-    ```
+```bash
+az account show --query tenantId -o tsv
+```
 
 **GitHub Secrets**:
 
