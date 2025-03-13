@@ -37,11 +37,20 @@ jobs:
             terraform -chdir=environments/dev init \
               -backend-config="storage_account_name=${{ secrets.DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
               -backend-config="access_key=${{ secrets.DEV_TFSTATE_STORAGE_KEY }}"
-          else
+          elif [ "${{ inputs.environment }}" == "qa" ]; then
             terraform -chdir=environments/qa init \
               -backend-config="storage_account_name=${{ secrets.QA_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
               -backend-config="access_key=${{ secrets.QA_TFSTATE_STORAGE_KEY }}"
+          else
+            echo "Invalid environment: ${{ inputs.environment }}"
+            exit 1
           fi
+          
+      - name: Terraform Format Check
+        run: terraform -chdir=environments/${{ inputs.environment }} fmt -check -diff
+
+      - name: Terraform Validate
+        run: terraform -chdir=environments/${{ inputs.environment }} validate
 
       - name: Terraform Plan
         run: |
@@ -52,12 +61,14 @@ jobs:
               -var "admin_group_object_id=${{ secrets.AKS_ADMIN_GROUP_ID }}" \
               -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" \
               -out=tfplan || exit 1
-            ls -la environments/dev/
-          else
+            
+          elif [ "${{ inputs.environment }}" == "qa" ]; then
             terraform -chdir=environments/qa plan \
               -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
               -out=tfplan || exit 1
-            ls -la environments/qa/
+          else
+            echo "Invalid environment: ${{ inputs.environment }}"
+            exit 1
           fi
 
       - name: Upload Terraform Plan
@@ -90,10 +101,13 @@ jobs:
             terraform -chdir=environments/dev init \
               -backend-config="storage_account_name=${{ secrets.DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
               -backend-config="access_key=${{ secrets.DEV_TFSTATE_STORAGE_KEY }}"
-          else
+          elif [ "${{ inputs.environment }}" == "qa" ]; then
             terraform -chdir=environments/qa init \
               -backend-config="storage_account_name=${{ secrets.QA_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
               -backend-config="access_key=${{ secrets.QA_TFSTATE_STORAGE_KEY }}"
+          else
+            echo "Invalid environment: ${{ inputs.environment }}"
+            exit 1
           fi
 
       - name: Download Terraform Plan
