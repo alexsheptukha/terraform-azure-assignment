@@ -79,7 +79,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "aks_node_pool" {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   vm_size               = "Standard_D2_v2"
   vnet_subnet_id        = azurerm_subnet.aks_subnet.id
-  min_count             = 1
-  max_count             = 1
+  min_count             = null
+  max_count             = null
   mode                  = "User"
 }
