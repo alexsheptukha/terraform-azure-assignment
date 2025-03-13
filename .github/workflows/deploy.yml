@@ -83,6 +83,18 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Terraform Init
+        run: |
+          if [ "${{ inputs.environment }}" == "dev" ]; then
+            terraform -chdir=environments/dev init \
+              -backend-config="storage_account_name=${{ secrets.DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
+              -backend-config="access_key=${{ secrets.DEV_TFSTATE_STORAGE_KEY }}"
+          else
+            terraform -chdir=environments/qa init \
+              -backend-config="storage_account_name=${{ secrets.QA_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
+              -backend-config="access_key=${{ secrets.QA_TFSTATE_STORAGE_KEY }}"
+          fi
 
       - name: Download Terraform Plan
         uses: actions/download-artifact@v4
