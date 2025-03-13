@@ -17,8 +17,8 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "key_vault" {
-  source             = "../../modules/key_vault"
-  key_vault_name     = "qa-kv-${random_string.suffix.result}"
+  source              = "../../modules/key_vault"
+  key_vault_name      = "qa-kv-${random_string.suffix.result}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 }
