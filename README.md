@@ -115,8 +115,10 @@ az account show --query tenantId -o tsv
   - On `workflow_dispatch`: Runs `terraform plan job` and waits for manual approval before `terraform apply job`.
 - **Steps**:
   1. `Terraform Init`: Initializes the backend with environment-specific Storage Accounts.
-  2. `Terraform Plan`: Generates a plan (`tfplan`) based on the selected environment.
-  3. `Terraform Apply`: Applies the plan after manual approval (only for `workflow_dispatch`).
+  2. `Terraform Format Check`: Format Terraform configuration files to a canonical format and style. It ensures consistency in the codebase by applying proper indentation, spacing, and alignment.
+  3. `Terraform Validate`: Checks whether the Terraform configuration is syntactically valid and internally consistent. It validates the configuration files without accessing any remote services (e.g., cloud providers).
+  4. `Terraform Plan`: Generates a plan (`tfplan`) based on the selected environment.
+  5. `Terraform Apply`: Applies the plan after manual approval (only for `workflow_dispatch`).
 - **Artifacts**:
   - Artifact with tfplan is passed from "plan" job to "apply" job.
 
