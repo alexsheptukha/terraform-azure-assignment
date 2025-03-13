@@ -106,7 +106,6 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
 ## Deployment Process
 ### Pipeline Overview
 - **Trigger**:
-  - On `push` to `main`: Runs `terraform plan` only.
   - On `workflow_dispatch`: Runs `terraform plan` and waits for manual approval before `terraform apply`.
 - **Steps**:
   1. `Terraform Init`: Initializes the backend with environment-specific Storage Accounts.
@@ -114,11 +113,8 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
   3. `Terraform Apply`: Applies the plan after manual approval (only for `workflow_dispatch`).
 
 ### Running the Pipeline
-1. **Push to `main`**:
-   - Automatically runs `terraform plan` for the DEV environment (default).
-   - Check the logs to review planned changes.
 
-2. **Manual Deployment**:
+**Manual Deployment**:
    - Go to GitHub > Actions > `Terraform Deployment` > Run workflow.
    - Inputs:
      - `environment`: `dev` or `qa`.
@@ -129,6 +125,8 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
         - Click "Review deployments" in the workflow run.
         - Select the environment (`dev` or `qa`) and click "Approve and deploy".
      3. `Terraform Apply` executes and deploys the resources.
+     
+Deploying on push is disabled for security reasons.
 
 ## Security & Best Practices
 - **Credentials**: Stored in GitHub Secrets (`AZURE_CREDENTIALS`, `*_TFSTATE_STORAGE_*`).
