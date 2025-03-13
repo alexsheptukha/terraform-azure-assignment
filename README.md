@@ -12,8 +12,6 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
   - qa/: Configures a Resource Group and Key Vault.
 - **.github/workflows/deploy.yml**: GitHub Actions pipeline for Terraform deployment.
 
-- **main.tf**: Defines the global `azurerm` provider configuration.
-- **variables.tf**: Global variables (e.g., `subscription_id`).
 
 ## Environments
 - **DEV**:
@@ -47,6 +45,13 @@ This repository contains a GitHub Actions pipeline to deploy Terraform code to a
      az storage container create --name "tfstate" --account-name "<qa-tfstate-account-name>"
      ```
    - Save the Storage Account names and access keys.
+   
+   ```bash
+   # For QA
+   az storage account keys list --resource-group "qa-tfstate-rg" --account-name <qa-tfstate-account-name> --query "[0].value" -o tsv
+   # For DEV
+   az storage account keys list --resource-group "dev-tfstate-rg" --account-name <dev-tfstate-account-name> --query "[0].value" -o tsv
+   ```
 
 **Service Principal**:
 
@@ -135,12 +140,12 @@ Deploying on push is disabled for security reasons.
 - **Access Control**: 
   - Configure RBAC in Azure to limit access to `dev-tfstate-rg` and `qa-tfstate-rg` (e.g., `Contributor` role for specific teams).
   - GitHub Environments require manual approval by authorized reviewers.
-- **AKS Security**: Basic network configuration with a single node pool (extendable for restricted public access).
+- - **AKS Security**: Advanced security configuration including a private cluster (API accessible only via VNet), Azure AD integration with RBAC for fine-grained access control, Calico network policies for pod traffic isolation, Network Security Group (NSG) for subnet protection, and Azure Monitor integration for logging and diagnostics.
 
 ## Resources Deployed
 - **DEV**:
   - Resource Group: `dev-rg`.
-  - Storage Account: `devstorage<random-suffix>` (lowercase, 18 characters).
+  - Storage Account: `devstorage<random-suffix>` (lowercase, 8 characters).
   - Optional AKS: `dev-aks` (enabled via `deploy_aks`).
 - **QA**:
   - Resource Group: `qa-rg`.
